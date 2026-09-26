@@ -304,6 +304,23 @@ button, input, select, textarea { font-family: inherit; font-size: 15px; color: 
 }
 
 .page[hidden] { display: none !important; }
+.board-careers .board-head, .board-careers .board-row { grid-template-columns: 70px 100px minmax(0, 1fr) 170px 120px 90px; }
+.board-app .board-head, .board-app .board-row { grid-template-columns: 120px minmax(0, 1fr) 140px 170px 96px; }
+.form-grid-3 { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; }
+.hire-steps { list-style: none; margin: 0 0 32px; padding: 20px 24px; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12px; background: #fff; border: 1px solid var(--line); border-radius: 20px; font-size: 16px; font-weight: 600; }
+.hire-steps li { display: flex; align-items: center; gap: 10px; }
+.hire-steps li span { display: inline-flex; align-items: center; justify-content: center; width: 32px; height: 32px; border-radius: 10px; background: var(--accent-soft); color: var(--accent); font-size: 13px; }
+.st-모집중 { background: #E4F4EA; color: #1E6B3A; }
+.st-마감 { background: #EEF0F3; color: #6A6F7A; }
+.st-검토중 { background: #FFF1DC; color: #8A4B00; }
+.st-면접 { background: #EDE8FB; color: #4B3BB5; }
+.st-합격 { background: #E4F4EA; color: #1E6B3A; }
+.st-불합격 { background: #EEF0F3; color: #6A6F7A; }
+.admin-views { margin-bottom: 20px; }
+a.tab { display: inline-flex; align-items: center; color: var(--ink); }
+a.tab[aria-pressed="true"] { color: #fff; }
+@media (max-width: 960px) { .form-grid-3 { grid-template-columns: minmax(0, 1fr); } .hire-steps { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (max-width: 640px) { .board-careers .board-row, .board-app .board-row { grid-template-columns: minmax(0, 1fr) auto; row-gap: 6px; padding: 16px 20px; } }
 .brand-text { display: flex; flex-direction: column; gap: 2px; line-height: 1.15; }
 .brand-text { gap: 4px; }
 .brand-text .brand-ko { display: block !important; padding-left: 0; border-left: 0; font-size: 19px; font-weight: 500; letter-spacing: 0.12em; color: #0E2A66; }
@@ -366,6 +383,7 @@ button, input, select, textarea { font-family: inherit; font-size: 15px; color: 
       <a href="#/home/process" data-nav="home">진행방식</a>
       <a href="#/notice" data-nav="notice">공지사항</a>
       <a href="#/ir" data-nav="ir">IR 자료</a>
+      <a href="#/careers" data-nav="careers">인재채용</a>
       <a class="nav-cta" href="#/contact" data-nav="contact">문의하기</a>
     </nav>
   </div>
@@ -703,6 +721,150 @@ button, input, select, textarea { font-family: inherit; font-size: 15px; color: 
   </div>
 </main>
 
+<!-- ===================== 인재채용 ===================== -->
+<main class="page" id="page-careers" hidden>
+  <section class="page-head">
+    <div class="container">
+      <div class="eyebrow">CAREERS</div>
+      <h1>인재채용</h1>
+      <p>유에스에스(주)와 함께 현장의 문제를 시스템으로 풀어갈 인재를 찾습니다.</p>
+    </div>
+  </section>
+  <div class="page-body">
+    <div class="container">
+      <div id="careers-list">
+        <ol class="hire-steps" aria-label="채용 절차">
+          <li><span>01</span>서류 접수</li>
+          <li><span>02</span>면접</li>
+          <li><span>03</span>처우 협의</li>
+          <li><span>04</span>입사</li>
+        </ol>
+        <div class="toolbar">
+          <div class="tabs" id="careers-tabs" role="group" aria-label="직무 구분"></div>
+          <div class="toolbar-right">
+            <label class="sr-only" for="careers-q">채용 공고 검색</label>
+            <input class="input input-search" id="careers-q" type="search" placeholder="공고명 검색">
+            <a class="btn btn-primary" id="careers-write" href="#/careers/write" hidden>공고 등록</a>
+          </div>
+        </div>
+        <div class="count" style="margin-bottom: 20px">총 <strong id="careers-count">0</strong>건</div>
+        <div class="board board-careers">
+          <div class="board-head"><div>번호</div><div>직무</div><div>공고명</div><div>경력 · 고용형태</div><div>마감일</div><div>상태</div></div>
+          <div id="careers-rows"></div>
+          <div class="board-empty" id="careers-empty" hidden>현재 진행 중인 채용이 없습니다. 상시 지원은 zanggoal@gmail.com으로 이력서를 보내 주세요.</div>
+        </div>
+      </div>
+      <article class="panel" id="careers-detail" hidden>
+        <div class="post-head">
+          <span class="badge" id="careers-d-cat"></span>
+          <h2 id="careers-d-title"></h2>
+          <div class="post-meta"><span id="careers-d-date"></span><span id="careers-d-meta"></span></div>
+        </div>
+        <div class="post-body" id="careers-d-body"></div>
+        <div class="attach" id="careers-d-attach" hidden>
+          <div class="attach-name"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#0B57A5" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 3H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/><path d="M14 3v6h6"/></svg><span id="careers-d-file"></span></div>
+          <a class="btn btn-sm btn-outline" id="careers-d-download" href="#">다운로드</a>
+        </div>
+        <div class="post-foot">
+          <button type="button" class="btn btn-danger" id="careers-delete" hidden>삭제</button>
+          <span></span>
+          <div style="display: flex; gap: 10px">
+            <a class="btn btn-outline" href="#/careers">목록</a>
+            <a class="btn btn-primary" id="careers-apply-btn" href="#">지원하기</a>
+          </div>
+        </div>
+      </article>
+      <div class="panel" id="careers-form-view" hidden>
+        <h2>채용 공고 등록</h2>
+        <form class="form" id="careers-form" novalidate>
+          <div class="form-row">
+            <div class="field">
+              <label for="careers-f-cat">직무</label>
+              <select class="select" id="careers-f-cat"><option>개발</option><option>컨설팅</option><option>경영지원</option></select>
+            </div>
+            <div class="field">
+              <label for="careers-f-title">공고명 <span class="req">*</span></label>
+              <input class="input" id="careers-f-title" type="text" placeholder="예: 응용 S/W 개발자 채용">
+            </div>
+          </div>
+          <div class="form-grid-3">
+            <div class="field">
+              <label for="careers-f-career">경력</label>
+              <select class="select" id="careers-f-career"><option>신입</option><option>경력</option><option>신입 · 경력</option><option>무관</option></select>
+            </div>
+            <div class="field">
+              <label for="careers-f-emp">고용형태</label>
+              <select class="select" id="careers-f-emp"><option>정규직</option><option>계약직</option><option>인턴</option><option>프리랜서</option></select>
+            </div>
+            <div class="field">
+              <label for="careers-f-deadline">마감일</label>
+              <input class="input" id="careers-f-deadline" type="date">
+              <div class="hint">비워 두면 상시채용</div>
+            </div>
+          </div>
+          <div class="field">
+            <label for="careers-f-body">내용 <span class="req">*</span></label>
+            <textarea class="textarea" id="careers-f-body" placeholder="담당 업무, 자격 요건, 우대 사항, 근무 조건 등을 입력하세요"></textarea>
+          </div>
+          <div class="field">
+            <label for="careers-f-file">첨부파일 <span class="hint">(선택)</span></label>
+            <input class="input" id="careers-f-file" type="file" style="padding: 10px 14px; border-style: dashed; background: #F5F8FD">
+            <div class="hint">지원서 양식 등 · 20MB 이하</div>
+          </div>
+          <div class="form-error" id="careers-error" role="alert"></div>
+          <div class="form-actions">
+            <a class="btn btn-outline" href="#/careers">취소</a>
+            <button type="submit" class="btn btn-primary">등록</button>
+          </div>
+        </form>
+      </div>
+      <div class="panel" id="careers-apply-view" hidden>
+        <h2>지원서 작성</h2>
+        <p class="muted">지원 공고: <strong id="apply-job" style="color: #15171C"></strong></p>
+        <form class="form" id="apply-form" novalidate>
+          <div class="form-grid-3">
+            <div class="field"><label for="apply-name">이름 <span class="req">*</span></label><input class="input" id="apply-name" type="text" autocomplete="name"></div>
+            <div class="field"><label for="apply-phone">연락처 <span class="req">*</span></label><input class="input" id="apply-phone" type="tel" placeholder="010-0000-0000" autocomplete="tel"></div>
+            <div class="field"><label for="apply-email">이메일 <span class="req">*</span></label><input class="input" id="apply-email" type="email" placeholder="name@example.com" autocomplete="email"></div>
+          </div>
+          <div class="field">
+            <label for="apply-file">이력서 · 포트폴리오 <span class="req">*</span></label>
+            <input class="input" id="apply-file" type="file" accept=".pdf,.doc,.docx,.hwp,.hwpx,.zip" style="padding: 10px 14px; border-style: dashed; background: #F5F8FD">
+            <div class="hint">PDF, DOC(X), HWP, ZIP · 20MB 이하</div>
+          </div>
+          <div class="field">
+            <label for="apply-intro">자기소개 · 전하고 싶은 말 <span class="hint">(선택)</span></label>
+            <textarea class="textarea" id="apply-intro" style="height: 160px"></textarea>
+          </div>
+          <div class="consent">
+            <div class="consent-check">
+              <input id="apply-agree" type="checkbox">
+              <label for="apply-agree">개인정보 수집 및 이용에 동의합니다 <span class="req">*</span></label>
+            </div>
+            <div class="hint">수집 항목: 이름, 연락처, 이메일, 이력서 · 이용 목적: 채용 전형 진행 · 보유 기간: 3년</div>
+          </div>
+          <div class="form-error" id="apply-error" role="alert"></div>
+          <div class="form-actions">
+            <a class="btn btn-outline" id="apply-cancel" href="#/careers">취소</a>
+            <button type="submit" class="btn btn-primary">지원서 제출</button>
+          </div>
+        </form>
+      </div>
+      <div class="panel" id="careers-apply-done" hidden>
+        <svg width="56" height="56" viewBox="0 0 24 24" fill="none" stroke="#0B57A5" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 1.8l8.8 5.1v10.2L12 22.2l-8.8-5.1V6.9z"/><path d="M8.2 12.2l2.6 2.6 5-5.4"/></svg>
+        <h2>지원서가 접수되었습니다</h2>
+        <p class="muted" id="apply-done-msg"></p>
+        <dl class="done-grid" style="margin: 0">
+          <dt>접수번호</dt><dd id="apply-d-id" style="font-weight: 600"></dd>
+          <dt>지원 공고</dt><dd id="apply-d-job"></dd>
+          <dt>접수일</dt><dd id="apply-d-date"></dd>
+        </dl>
+        <div><a class="btn btn-dark" href="#/careers">채용 공고 목록</a></div>
+      </div>
+    </div>
+  </div>
+</main>
+
 <!-- ===================== 문의하기 ===================== -->
 <main class="page" id="page-contact" hidden>
   <section class="page-head">
@@ -797,13 +959,13 @@ button, input, select, textarea { font-family: inherit; font-size: 15px; color: 
     <div class="container">
       <div class="eyebrow">ADMIN</div>
       <h1>관리자</h1>
-      <p>문의 내역을 확인하고 공지사항 · IR 자료를 등록합니다.</p>
+      <p>문의 · 지원자 내역을 확인하고 공지사항 · IR 자료 · 채용 공고를 등록합니다.</p>
     </div>
   </section>
   <div class="page-body">
     <div class="container">
       <div class="admin-note" id="mode-note">
-        <strong>이 PC 브라우저에 저장됩니다.</strong> 등록한 글, 첨부파일, 문의 내역은 지금 쓰는 브라우저에 보관됩니다.
+        <strong>이 PC 브라우저에 저장됩니다.</strong> 등록한 글, 첨부파일, 문의 · 지원자 내역은 지금 쓰는 브라우저에 보관됩니다.
         브라우저 기록(사이트 데이터)을 지우면 함께 지워지니 <strong>백업 내려받기</strong>로 가끔 보관해 두세요.
       </div>
 
@@ -833,6 +995,7 @@ button, input, select, textarea { font-family: inherit; font-size: 15px; color: 
           <div class="toolbar-right">
             <button type="button" class="btn btn-outline btn-sm" id="inq-reload">새로고침</button>
             <button type="button" class="btn btn-outline btn-sm" id="inq-csv">문의 내역 엑셀(CSV)</button>
+            <button type="button" class="btn btn-outline btn-sm" id="app-csv">지원자 엑셀(CSV)</button>
             <button type="button" class="btn btn-outline btn-sm" id="backup-save">백업 내려받기</button>
             <label class="btn btn-outline btn-sm" for="backup-file" style="margin: 0">백업 불러오기</label>
             <input id="backup-file" type="file" accept=".json,application/json" hidden>
@@ -841,6 +1004,11 @@ button, input, select, textarea { font-family: inherit; font-size: 15px; color: 
         </div>
 
         <div class="hint" id="store-info" style="margin-bottom: 16px"></div>
+        <div class="tabs admin-views" role="group" aria-label="관리 항목">
+          <a class="tab" id="view-inq" href="#/admin" aria-pressed="true">문의 내역</a>
+          <a class="tab" id="view-app" href="#/admin/apply" aria-pressed="false">지원자 내역</a>
+          <a class="tab" href="#/careers/write" aria-pressed="false">채용 공고 등록</a>
+        </div>
         <div id="inq-list">
           <div class="toolbar">
             <div class="tabs" id="inq-tabs" role="group" aria-label="처리 상태">
@@ -894,6 +1062,63 @@ button, input, select, textarea { font-family: inherit; font-size: 15px; color: 
             </div>
           </form>
         </article>
+
+        <div id="app-list" hidden>
+          <div class="toolbar">
+            <div class="tabs" id="app-tabs" role="group" aria-label="전형 상태">
+              <button type="button" class="tab" data-tab="전체" aria-pressed="true">전체</button>
+              <button type="button" class="tab" data-tab="접수" aria-pressed="false">접수</button>
+              <button type="button" class="tab" data-tab="검토중" aria-pressed="false">검토중</button>
+              <button type="button" class="tab" data-tab="면접" aria-pressed="false">면접</button>
+              <button type="button" class="tab" data-tab="합격" aria-pressed="false">합격</button>
+              <button type="button" class="tab" data-tab="불합격" aria-pressed="false">불합격</button>
+            </div>
+            <div class="count">지원자 <strong id="app-count">0</strong>명</div>
+          </div>
+          <div class="board board-app">
+            <div class="board-head"><div>접수일</div><div>지원 공고</div><div>이름</div><div>연락처</div><div>상태</div></div>
+            <div id="app-rows"></div>
+            <div class="board-empty" id="app-empty" hidden>지원자 내역이 없습니다.</div>
+          </div>
+        </div>
+
+        <article class="panel" id="app-detail" hidden>
+          <div class="post-head">
+            <span class="badge" id="app-d-status"></span>
+            <h2 id="app-d-title"></h2>
+            <div class="post-meta"><span id="app-d-id"></span><span id="app-d-date"></span></div>
+          </div>
+          <dl class="done-grid" style="margin: 0">
+            <dt>지원 공고</dt><dd id="app-d-job"></dd>
+            <dt>이름</dt><dd id="app-d-name"></dd>
+            <dt>연락처</dt><dd><a id="app-d-phone" href="#" style="color: #0B57A5"></a></dd>
+            <dt>이메일</dt><dd><a id="app-d-email" href="#" style="color: #0B57A5"></a></dd>
+          </dl>
+          <div class="attach">
+            <div class="attach-name"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#0B57A5" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 3H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/><path d="M14 3v6h6"/></svg><span id="app-d-file"></span></div>
+            <button type="button" class="btn btn-sm btn-outline" id="app-d-download">이력서 다운로드</button>
+          </div>
+          <div class="post-body" id="app-d-intro" style="min-height: 60px"></div>
+          <form class="form" id="app-form" novalidate>
+            <div class="form-row">
+              <div class="field">
+                <label for="app-f-status">전형 상태</label>
+                <select class="select" id="app-f-status"><option>접수</option><option>검토중</option><option>면접</option><option>합격</option><option>불합격</option></select>
+              </div>
+              <div class="field">
+                <label for="app-f-memo">관리 메모</label>
+                <input class="input" id="app-f-memo" type="text" placeholder="예: 10/7 1차 면접">
+              </div>
+            </div>
+            <div class="post-foot" style="padding-top: 0; border-top: 0">
+              <button type="button" class="btn btn-danger" id="app-delete">삭제</button>
+              <div style="display: flex; gap: 10px">
+                <a class="btn btn-outline" href="#/admin/apply">목록</a>
+                <button type="submit" class="btn btn-primary">저장</button>
+              </div>
+            </div>
+          </form>
+        </article>
       </div>
     </div>
   </div>
@@ -935,6 +1160,20 @@ button, input, select, textarea { font-family: inherit; font-size: 15px; color: 
     "title": "프로젝트 상담 문의 안내",
     "date": "2026-09-26",
     "body": "프로젝트 상담은 문의하기 페이지, 이메일(zanggoal@gmail.com) 또는 대표 전화(0503-7150-9256)로 문의해 주세요.\n상담 시간: 평일 10:00 – 16:00"
+  }
+]
+</script>
+<script type="application/json" id="data-careers">
+[
+  {
+    "id": 1,
+    "cat": "개발",
+    "title": "[예시] 응용 S/W 개발자 채용",
+    "date": "2026-09-26",
+    "career": "신입 · 경력",
+    "emp": "정규직",
+    "deadline": "2026-10-31",
+    "body": "[담당 업무]\n- 제조·자재·출하 관리 시스템 개발 및 유지보수\n- 고객사 요구사항 분석 및 기능 설계\n\n[자격 요건]\n- 웹 또는 응용 프로그램 개발 경험\n\n[근무지]\n- 경기도 수원시 영통구 (본사)\n\n※ 예시 공고입니다. 관리자 로그인 후 삭제하고 실제 공고를 등록해 주세요."
   }
 ]
 </script>
@@ -1097,10 +1336,12 @@ button, input, select, textarea { font-family: inherit; font-size: 15px; color: 
     $(p + '-list').hidden = v !== 'list';
     $(p + '-detail').hidden = v !== 'detail';
     $(p + '-form-view').hidden = v !== 'write';
+    if ($(p + '-apply-view')) { $(p + '-apply-view').hidden = v !== 'apply'; $(p + '-apply-done').hidden = v !== 'applied'; }
     $(p + '-write').hidden = !isAdmin();
     $(p + '-delete').hidden = !isAdmin();
   };
   Board.prototype.route = function (sub) {
+    if (this.cfg.route && this.cfg.route.call(this, sub)) return;
     if (sub === 'write') {
       if (!isAdmin()) { location.hash = '#/admin'; return; }
       this.show('write'); $(this.p + '-form').reset(); $(this.p + '-error').textContent = '';
@@ -1133,6 +1374,7 @@ button, input, select, textarea { font-family: inherit; font-size: 15px; color: 
       $(p + '-d-attach').hidden = !x.file;
       if (x.file) { $(p + '-d-file').textContent = x.file; $(p + '-d-download').href = '#'; }
     }
+    if (this.cfg.afterDetail) this.cfg.afterDetail.call(this, x);
   };
   Board.prototype.downloadFile = function () {
     var x = this.cur;
@@ -1155,6 +1397,7 @@ button, input, select, textarea { font-family: inherit; font-size: 15px; color: 
     var items = this.items();
     var post = { id: nextId(items), cat: $(p + '-f-cat').value, title: title, date: today(), body: body };
     if (file) post.file = file.name;
+    (this.cfg.extra || []).forEach(function (k) { post[k] = $(p + '-f-' + k).value; });
     err.textContent = ''; btn.disabled = true;
     var saveFile = file ? Files.put(p + '-' + post.id, file) : Promise.resolve();
     saveFile.then(function () {
@@ -1173,6 +1416,9 @@ button, input, select, textarea { font-family: inherit; font-size: 15px; color: 
     location.hash = '#/' + self.p;
   };
 
+  var applyJob = null;
+  function jobStatus(x) { return !x.deadline || x.deadline >= today() ? '모집중' : '마감'; }
+
   var boards = {
     notice: new Board({
       key: 'notice', bodyRequired: true, withFile: true,
@@ -1180,6 +1426,39 @@ button, input, select, textarea { font-family: inherit; font-size: 15px; color: 
         return '<button type="button" class="board-row" data-id="' + x.id + '">' +
           '<div class="m no">' + x.id + '</div><div><span class="badge">' + esc(x.cat) + '</span></div>' +
           '<div class="t">' + esc(x.title) + (x.file ? ' <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#6A6F7A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-label="첨부파일 있음" role="img" style="vertical-align: -2px"><path d="M21 11.5l-8.6 8.6a5 5 0 0 1-7.1-7.1l8.6-8.6a3.3 3.3 0 0 1 4.7 4.7l-8.6 8.6a1.7 1.7 0 0 1-2.4-2.4l7.9-7.9"/></svg>' : '') + '</div><div class="m">' + esc(x.date) + '</div></button>';
+      }
+    }),
+    careers: new Board({
+      key: 'careers', bodyRequired: true, withFile: true, extra: ['career', 'emp', 'deadline'],
+      tabs: ['전체', '개발', '컨설팅', '경영지원'],
+      row: function (x) {
+        var st = jobStatus(x);
+        return '<button type="button" class="board-row" data-id="' + x.id + '">' +
+          '<div class="m no">' + x.id + '</div><div><span class="badge">' + esc(x.cat) + '</span></div>' +
+          '<div class="t">' + esc(x.title) + '</div>' +
+          '<div class="m hide-sm">' + esc((x.career || '-') + ' · ' + (x.emp || '-')) + '</div>' +
+          '<div class="m">' + esc(x.deadline || '상시채용') + '</div>' +
+          '<div><span class="st st-' + st + '">' + st + '</span></div></button>';
+      },
+      afterDetail: function (x) {
+        var open = jobStatus(x) === '모집중';
+        $('careers-d-meta').textContent = (x.career || '-') + ' · ' + (x.emp || '-') + ' · 마감 ' + (x.deadline || '상시채용');
+        $('careers-apply-btn').hidden = !open;
+        $('careers-apply-btn').href = '#/careers/apply/' + x.id;
+      },
+      route: function (sub) {
+        var m = /^apply\/(\d+)$/.exec(sub || '');
+        if (!m) return false;
+        var job = null;
+        this.items().forEach(function (x) { if (Number(x.id) === Number(m[1])) job = x; });
+        if (!job) { location.hash = '#/careers'; return true; }
+        if (jobStatus(job) !== '모집중') { alert('마감된 공고입니다.'); location.hash = '#/careers/' + job.id; return true; }
+        this.show('apply');
+        applyJob = job;
+        $('apply-form').reset(); $('apply-error').textContent = '';
+        $('apply-job').textContent = job.title;
+        $('apply-cancel').href = '#/careers/' + job.id;
+        return true;
       }
     }),
     ir: new Board({
@@ -1227,6 +1506,38 @@ button, input, select, textarea { font-family: inherit; font-size: 15px; color: 
       $('c-form').reset(); $('c-view-done').hidden = true; $('c-view-form').hidden = false;
     });
   })();
+
+  /* ---------------- 지원서 제출 ---------------- */
+  var DBA = {
+    list: function () { return store.get('uss-apply') || []; },
+    save: function (items) { return store.set('uss-apply', items); }
+  };
+  $('apply-form').addEventListener('submit', function (e) {
+    e.preventDefault();
+    var err = $('apply-error'), btn = this.querySelector('button[type=submit]'), job = applyJob;
+    var v = { name: $('apply-name').value.trim(), phone: $('apply-phone').value.trim(), email: $('apply-email').value.trim(), intro: $('apply-intro').value.trim() };
+    var file = $('apply-file').files[0];
+    if (!job) { err.textContent = '지원할 공고를 다시 선택해 주세요.'; return; }
+    if (!v.name) { err.textContent = '이름을 입력해 주세요.'; $('apply-name').focus(); return; }
+    if (!v.phone) { err.textContent = '연락처를 입력해 주세요.'; $('apply-phone').focus(); return; }
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v.email)) { err.textContent = '올바른 이메일 주소를 입력해 주세요.'; $('apply-email').focus(); return; }
+    if (!file) { err.textContent = '이력서 파일을 첨부해 주세요.'; return; }
+    if (file.size > 20 * 1024 * 1024) { err.textContent = '파일은 20MB 이하만 올릴 수 있습니다.'; return; }
+    if (!$('apply-agree').checked) { err.textContent = '개인정보 수집 및 이용에 동의해 주세요.'; $('apply-agree').focus(); return; }
+    v.id = 'APP-' + today().replace(/-/g, '') + '-' + (Math.floor(Math.random() * 9000) + 1000);
+    v.date = today(); v.jobId = job.id; v.jobTitle = job.title; v.file = file.name; v.status = '접수'; v.memo = '';
+    err.textContent = ''; btn.disabled = true;
+    Files.put('apply-' + v.id, file).then(function () {
+      var list = DBA.list(); list.push(v);
+      if (!DBA.save(list)) throw new Error('저장 공간이 부족합니다.');
+      boards.careers.show('applied');
+      $('apply-done-msg').textContent = v.name + ' 님, 지원해 주셔서 감사합니다. 서류 검토 후 ' + v.email + '(으)로 연락드리겠습니다.';
+      $('apply-d-id').textContent = v.id; $('apply-d-job').textContent = v.jobTitle; $('apply-d-date').textContent = v.date;
+      window.scrollTo(0, 0);
+    }).catch(function (e2) {
+      err.textContent = '제출하지 못했습니다: ' + e2.message;
+    }).then(function () { btn.disabled = false; });
+  });
 
   /* ---------------- 관리자 ---------------- */
   var inq = { tab: '전체', cur: null };
@@ -1296,7 +1607,7 @@ button, input, select, textarea { font-family: inherit; font-size: 15px; color: 
       return Promise.all(keys.map(function (k) { return blobToDataUrl(files[k]); })).then(function (urls) {
         var f = {}; keys.forEach(function (k, i) { f[k] = urls[i]; });
         var data = { app: 'uss-homepage', version: 1, savedAt: new Date().toISOString(),
-          notice: DB.posts('notice'), ir: DB.posts('ir'), inquiry: DB.inquiries(), files: f };
+          notice: DB.posts('notice'), ir: DB.posts('ir'), careers: DB.posts('careers'), inquiry: DB.inquiries(), apply: DBA.list(), files: f };
         download('USS_홈페이지_백업_' + today() + '.json', new Blob([JSON.stringify(data)], { type: 'application/json' }));
       });
     }).catch(function (e) { alert('백업하지 못했습니다: ' + e.message); });
@@ -1309,6 +1620,8 @@ button, input, select, textarea { font-family: inherit; font-size: 15px; color: 
       var data = JSON.parse(text);
       if (!data || data.app !== 'uss-homepage') throw new Error('이 홈페이지의 백업 파일이 아닙니다.');
       DB.savePosts('notice', data.notice || []); DB.savePosts('ir', data.ir || []); DB.saveInquiries(data.inquiry || []);
+      if (data.careers) DB.savePosts('careers', data.careers);
+      if (data.apply) DBA.save(data.apply);
       var files = data.files || {};
       return Promise.all(Object.keys(files).map(function (k) {
         return fetch(files[k]).then(function (r) { return r.blob(); }).then(function (b) { return Files.put(k, b); });
@@ -1317,10 +1630,81 @@ button, input, select, textarea { font-family: inherit; font-size: 15px; color: 
       .catch(function (err) { alert('불러오지 못했습니다: ' + err.message); });
   });
 
+  var app = { tab: '전체', cur: null };
+  $('app-tabs').addEventListener('click', function (e) {
+    var b = e.target.closest('.tab'); if (!b) return;
+    app.tab = b.getAttribute('data-tab');
+    this.querySelectorAll('.tab').forEach(function (x) { x.setAttribute('aria-pressed', String(x === b)); });
+    renderApplicants();
+  });
+  $('app-rows').addEventListener('click', function (e) {
+    var r = e.target.closest('.board-row');
+    if (r) location.hash = '#/admin/apply/' + r.getAttribute('data-id');
+  });
+  $('app-form').addEventListener('submit', function (e) {
+    e.preventDefault();
+    var id = app.cur, status = $('app-f-status').value, memo = $('app-f-memo').value.trim();
+    DBA.save(DBA.list().map(function (x) { return x.id === id ? Object.assign({}, x, { status: status, memo: memo }) : x; }));
+    location.hash = '#/admin/apply';
+  });
+  $('app-delete').addEventListener('click', function () {
+    var id = app.cur;
+    if (!confirm('이 지원서를 삭제할까요? 첨부된 이력서도 함께 삭제됩니다.')) return;
+    DBA.save(DBA.list().filter(function (x) { return x.id !== id; }));
+    Files.del('apply-' + id).catch(function () { /* 무시 */ });
+    location.hash = '#/admin/apply';
+  });
+  $('app-d-download').addEventListener('click', function () {
+    var x = null; DBA.list().forEach(function (y) { if (y.id === app.cur) x = y; });
+    if (!x) return;
+    Files.get('apply-' + x.id).then(function (blob) {
+      if (!blob) { alert('이 브라우저에 이력서 파일이 없습니다.'); return; }
+      download(x.file, blob);
+    }).catch(function (e) { alert('파일을 열지 못했습니다: ' + e.message); });
+  });
+  $('app-csv').addEventListener('click', function () {
+    var cols = [['id', '접수번호'], ['date', '접수일'], ['status', '상태'], ['jobTitle', '지원 공고'], ['name', '이름'], ['phone', '연락처'],
+      ['email', '이메일'], ['file', '이력서 파일'], ['intro', '자기소개'], ['memo', '관리 메모']];
+    var cell = function (v) { return '"' + String(v == null ? '' : v).replace(/"/g, '""') + '"'; };
+    var lines = [cols.map(function (c) { return cell(c[1]); }).join(',')].concat(
+      DBA.list().map(function (x) { return cols.map(function (c) { return cell(x[c[0]]); }).join(','); }));
+    download('USS_지원자내역_' + today() + '.csv', new Blob(['\uFEFF' + lines.join('\r\n')], { type: 'text/csv;charset=utf-8' }));
+  });
+  function renderApplicants() {
+    var tab = app.tab;
+    var list = DBA.list().filter(function (x) { return tab === '전체' || (x.status || '접수') === tab; })
+      .sort(function (a2, b2) { return String(b2.date + b2.id).localeCompare(String(a2.date + a2.id)); });
+    $('app-count').textContent = list.length;
+    $('app-empty').hidden = list.length > 0;
+    $('app-rows').innerHTML = list.map(function (x) {
+      var st = x.status || '접수';
+      return '<button type="button" class="board-row" data-id="' + esc(x.id) + '">' +
+        '<div class="m">' + esc(x.date) + '</div>' +
+        '<div class="t">' + esc(x.jobTitle) + '</div>' +
+        '<div>' + esc(x.name) + '</div>' +
+        '<div class="m hide-sm">' + esc(x.phone) + '</div>' +
+        '<div><span class="st st-' + esc(st) + '">' + esc(st) + '</span></div></button>';
+    }).join('');
+  }
+  function showApplicant(x) {
+    app.cur = x.id;
+    var st = x.status || '접수';
+    $('app-list').hidden = true; $('app-detail').hidden = false;
+    $('app-d-status').textContent = st; $('app-d-status').className = 'st st-' + st;
+    $('app-d-title').textContent = x.name + ' 님의 지원서';
+    $('app-d-id').textContent = '접수번호 ' + x.id; $('app-d-date').textContent = '접수일 ' + x.date;
+    $('app-d-job').textContent = x.jobTitle; $('app-d-name').textContent = x.name;
+    $('app-d-phone').textContent = x.phone; $('app-d-phone').href = 'tel:' + String(x.phone).replace(/[^0-9+]/g, '');
+    $('app-d-email').textContent = x.email; $('app-d-email').href = 'mailto:' + x.email;
+    $('app-d-file').textContent = x.file || '-';
+    $('app-d-intro').textContent = x.intro || '(자기소개 없음)';
+    $('app-f-status').value = st; $('app-f-memo').value = x.memo || '';
+  }
+
   function renderInquiries() {
     var tab = inq.tab, all = DB.inquiries();
     var where = location.protocol === 'file:' ? '내 PC에서 연 파일' : location.host;
-    $('store-info').textContent = '저장 위치: ' + where + ' · 이 브라우저에 저장된 문의 ' + all.length + '건 (마지막 확인 ' + new Date().toLocaleTimeString('ko-KR') + ')';
+    $('store-info').textContent = '저장 위치: ' + where + ' · 이 브라우저에 저장된 문의 ' + all.length + '건 · 지원자 ' + DBA.list().length + '명 (마지막 확인 ' + new Date().toLocaleTimeString('ko-KR') + ')';
     var list = all.filter(function (x) { return tab === '전체' || (x.status || '접수') === tab; })
       .sort(function (a, b) { return String(b.date + b.id).localeCompare(String(a.date + a.id)); });
     $('inq-count').textContent = list.length;
@@ -1362,14 +1746,26 @@ button, input, select, textarea { font-family: inherit; font-size: 15px; color: 
       setTimeout(function () { $('login-pw').focus(); }, 0);
       return;
     }
+    var isApp = sub === 'apply' || sub.indexOf('apply/') === 0;
+    $('view-inq').setAttribute('aria-pressed', String(!isApp));
+    $('view-app').setAttribute('aria-pressed', String(isApp));
+    renderInquiries();
+    $('inq-list').hidden = true; $('inq-detail').hidden = true; $('app-list').hidden = true; $('app-detail').hidden = true;
+    if (isApp) {
+      var aid = sub.slice(6), ahit = null;
+      DBA.list().forEach(function (x) { if (x.id === aid) ahit = x; });
+      if (ahit) { showApplicant(ahit); return; }
+      $('app-list').hidden = false; renderApplicants();
+      return;
+    }
     var hit = null;
     DB.inquiries().forEach(function (x) { if (String(x.id) === sub) hit = x; });
     if (hit) { showInquiry(hit); return; }
-    $('inq-list').hidden = false; $('inq-detail').hidden = true; renderInquiries();
+    $('inq-list').hidden = false; renderInquiries();
   }
 
   /* ---------------- 화면 전환 ---------------- */
-  var titles = { home: '유에스에스(주) Ultra Sky Space | IT 컨설팅 · 응용 S/W 개발', notice: '공지사항 | 유에스에스(주)', ir: 'IR 자료 | 유에스에스(주)', contact: '문의하기 | 유에스에스(주)', admin: '관리자 | 유에스에스(주)' };
+  var titles = { home: '유에스에스(주) Ultra Sky Space | IT 컨설팅 · 응용 S/W 개발', notice: '공지사항 | 유에스에스(주)', ir: 'IR 자료 | 유에스에스(주)', careers: '인재채용 | 유에스에스(주)', contact: '문의하기 | 유에스에스(주)', admin: '관리자 | 유에스에스(주)' };
   function route() {
     var parts = location.hash.replace(/^#\/?/, '').split('/');
     var page = titles[parts[0]] ? parts[0] : 'home', sub = decodeURIComponent(parts.slice(1).join('/') || '');
